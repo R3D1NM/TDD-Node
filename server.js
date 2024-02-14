@@ -5,6 +5,7 @@ const PORT = 5000;
 
 // App
 const app = express()
+app.use(express.json())
 
 app.get('/',(req,res)=>{
     res.send("Hello World")
