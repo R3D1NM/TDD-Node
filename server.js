@@ -5,11 +5,14 @@ const PORT = 5000;
 
 // App
 const app = express()
+
+// Midlewares
 app.use(express.json())
 
-app.get('/',(req,res)=>{
-    res.send("Hello World")
-})
+// Routes
+const productRoutes = require('./routes')
+app.use("/api/products",productRoutes)
+
 
 app.listen(PORT)
 console.log(`APPLICATION NOW RUNNING ON PORT:${PORT}`);
