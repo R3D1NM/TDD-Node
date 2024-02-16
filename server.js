@@ -22,3 +22,5 @@ mongoose.connect(dbURI).then(() => console.log('[DATABASE] CONNECTED')).catch(()
 
 app.listen(PORT)
 console.log(`APPLICATION NOW RUNNING ON PORT:${PORT}`);
+
+module.exports=app
