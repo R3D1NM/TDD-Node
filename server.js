@@ -14,6 +14,11 @@ app.use(express.json())
 const productRoutes = require('./routes')
 app.use("/api/products",productRoutes)
 
+// Middleware
+app.use((error,req,res,next)=>{
+    res.status(500).json({message:error.message})
+})
+
 // Database
 const mongoose = require('mongoose')
 const dbURI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@movieweb.nvzwk.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
