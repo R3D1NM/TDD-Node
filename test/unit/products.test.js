@@ -25,9 +25,15 @@ describe("Product Controller Create", () =>{
         productController.createProduct(req,res,next);
         expect(productModel.create).toBeCalledWith(newProduct);
     })
-test("should return 201 status code", () =>{
-    productController.createProduct(req,res,next)
-    expect(res.statusCode).toBe(201);
-})
+    test("should return 201 status code", () =>{
+        productController.createProduct(req,res,next)
+        expect(res.statusCode).toBe(201);
+        expect(res._isEndCalled()).toBeTruthy()
+    })
+    test("should return json body in response",()=>{
+        productModel.create.mockReturnValue(newProduct)
+        productController.createProduct(req,res,next)
+        expect(res._getJSONData()).toStrictEqual(newProduct)
+    })
 })
 
