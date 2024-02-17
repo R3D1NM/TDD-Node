@@ -6,6 +6,9 @@ const allProducts = require('../data/all-products.json')
 
 productModel.create = jest.fn();
 productModel.find = jest.fn();
+productModel.findById = jest.fn()
+
+const productId = "12a3db3e"
 
 let req, res, next
 beforeEach(()=>{
@@ -71,5 +74,41 @@ describe('Products Controller Get', () => {
 
         await productController.getProducts(req,res,next)
         expect(next).toBeCalledWith(errorMessage)
+    })
+})
+
+describe('Product Controller GetById', () => {  
+    test('should have a getProductById function', () => {  
+        expect(typeof productController.getProductById).toBe("function")
+    })
+    test('should call ProductModel.findById', async () => { 
+        req.params.productId = productId
+        await productController.getProductById(req,res,next)
+
+        expect(productModel.findById).toBeCalledWith(productId)
+    })
+    test('should return json body and status code 200', async () => {  
+        productModel.findById.mockReturnValue(newProduct)
+        await productController.getProductById(req,res,next);
+        
+        expect(res.statusCode).toBe(200)
+        expect(res._getJSONData()).toStrictEqual(newProduct)
+        expect(res._isEndCalled()).toBeTruthy()
+    })
+    test('should return 404 when the item do not exist', async () => { 
+        productModel.findById.mockReturnValue(null)
+        await productController.getProductById(req,res,next)
+
+        expect(res.statusCode).toBe(404)
+        expect(res._isEndCalled()).toBeTruthy()
+    })
+    test('should handle errors', async () => { 
+        const errorMessage = {message: "error"}
+        const rejectedPromise = Promise.reject(errorMessage)
+        productModel.findById.mockReturnValue(rejectedPromise)
+
+        await productController.getProductById(req, res, next)
+        
+        expect(next).toHaveBeenCalledWith(errorMessage)
     })
 })
