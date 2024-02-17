@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Chocolate",
+        "description": "82% Dark Chocolate",
+        "price": 10
+    },
+    {
+        "name": "Candy",
+        "description": "Sweet Lemon candy",
+        "price": 8
+    },
+    {
+        "name": "Gummy Bear",
+        "description": "Grape flavored jelly",
+        "price": 12
+    }
+]
