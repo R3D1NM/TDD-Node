@@ -43,7 +43,7 @@ test('GET /api/products/:productId', async () =>{
     expect(response.body.description).toBe(firstProduct.description)
 })
 
-test('GET id do not exist /api/products/:productID', async () => { 
+test('GET id not exist /api/products/:productID', async () => { 
     const response = await request(app)
     .get('/api/products/65cf42a5ae125c8f3efc9f00')
 
@@ -60,10 +60,24 @@ test('PUT /api/products/:productId', async () => {
     expect(response.body.description).toBe("updated item")
 })
 
-test('PUT id do not exist /api/products/:productID', async () => { 
+test('PUT id not exist /api/products/:productID', async () => { 
     const response = await request(app)
     .put('/api/products/65cf42a5ae125c8f3efc9f00')
     .send({name: "updated", description: "updated item"})
+
+    expect(response.statusCode).toBe(404)
+})
+
+test('DELETE /api/products/:productId', async () => { 
+    const response = await request(app)
+    .delete(`/api/products/${firstProduct._id}`)
+
+    expect(response.statusCode).toBe(200)
+})
+
+test('DELETE id not exist /api/products/:productID', async () => { 
+    const response = await request(app)
+    .delete('/api/products/65cf42a5ae125c8f3efc9f00')
 
     expect(response.statusCode).toBe(404)
 })
