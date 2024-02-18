@@ -136,4 +136,19 @@ describe('Product Controller Update', () => {
         expect(res._getJSONData()).toStrictEqual(updatedProduct)
         expect(res._isEndCalled()).toBeTruthy()
     })
+    test('should return 404 when the item do not exist', async () => { 
+        productModel.findByIdAndUpdate.mockReturnValue(null)
+        await productController.updateProduct(req,res,next)
+
+        expect(res.statusCode).toBe(404)
+        expect(res._isEndCalled()).toBeTruthy()
+    })
+    test('should handle errors', async () => { 
+        const errorMessage = {message: "error"}
+        const rejectedPromise = Promise.reject(errorMessage)
+        productModel.findByIdAndUpdate.mockReturnValue(rejectedPromise)
+        await productController.updateProduct(req,res,next)
+
+        expect(next).toBeCalledWith(errorMessage)
+    })
 })
