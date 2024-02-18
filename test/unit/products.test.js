@@ -7,8 +7,10 @@ const allProducts = require('../data/all-products.json')
 productModel.create = jest.fn();
 productModel.find = jest.fn();
 productModel.findById = jest.fn()
+productModel.findByIdAndUpdate = jest.fn()
 
 const productId = "12a3db3e"
+const updatedProduct = {name: "updated", description: "updated item"}
 
 let req, res, next
 beforeEach(()=>{
@@ -49,7 +51,7 @@ describe("Product Controller Create", () =>{
     })
 })
 
-describe('Products Controller Get', () => { 
+describe('Product Controller Get', () => { 
     test('should have a getProducts functions', () => { 
         expect(typeof productController.getProducts).toBe("function")
     })
@@ -110,5 +112,28 @@ describe('Product Controller GetById', () => {
         await productController.getProductById(req, res, next)
         
         expect(next).toHaveBeenCalledWith(errorMessage)
+    })
+})
+
+describe('Product Controller Update', () => { 
+    test('should have an updateProduct function', () => { 
+        expect(typeof productController.updateProduct).toBe("function")
+    })
+    test('should call ProductModel.findByIdAndUpdate', async () => { 
+        req.params.productId = productId
+        req.body = updatedProduct
+        await productController.updateProduct(req,res,next)
+
+        expect(productModel.findByIdAndUpdate).toBeCalledWith(productId,updatedProduct,{new:true})
+    })
+    test('should return json body and status code 200', async () => {  
+        productModel.findByIdAndUpdate.mockReturnValue(updatedProduct)
+        req.params.productId = productId
+        req.body = updatedProduct
+        await productController.updateProduct(req,res,next);
+        
+        expect(res.statusCode).toBe(200)
+        expect(res._getJSONData()).toStrictEqual(updatedProduct)
+        expect(res._isEndCalled()).toBeTruthy()
     })
 })
